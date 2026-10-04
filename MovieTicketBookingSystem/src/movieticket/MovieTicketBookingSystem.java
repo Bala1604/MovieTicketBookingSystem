@@ -10,6 +10,7 @@ public class MovieTicketBookingSystem {
 
         Scanner scanner = new Scanner(System.in);
 
+        // Create objects
         Theatre theatre = new Theatre();
 
         Booking booking = new Booking(theatre);
@@ -20,100 +21,186 @@ public class MovieTicketBookingSystem {
 
         MovieRating movieRating = new MovieRating();
 
-        System.out.println("================================");
-        System.out.println("    MOVIE TICKET BOOKING SYSTEM");
-        System.out.println("================================");
+        // Display project heading
+        System.out.println("==========================================");
+        System.out.println("     MOVIE TICKET BOOKING SYSTEM");
+        System.out.println("==========================================");
 
         System.out.println();
 
+        // Display movie
         movie.displayMovie();
 
-        // Show available seats
-        theatre.displaySeats();
+        boolean running = true;
 
-        // Booking date
-        System.out.println();
-        System.out.print("Enter booking date (yyyy-MM-dd): ");
-
-        String dateInput = scanner.nextLine();
-
-        DateTimeFormatter formatter =
-                DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        LocalDate bookingDate =
-                LocalDate.parse(dateInput, formatter);
-
-        System.out.println("Booking Date: " + bookingDate);
-        System.out.println("Day: " + bookingDate.getDayOfWeek());
-
-        // Book ticket
-        System.out.println();
-        System.out.print("Enter seat number to book (Example: A3): ");
-
-        String bookSeat = scanner.nextLine();
-
-        Ticket ticket = booking.bookTicket(bookSeat, bookingDate);
-
-        if (ticket != null) {
-
-            ticket.displayTicket();
-
-            // Apply coupon
-            System.out.println();
-            System.out.print(
-                    "Enter coupon code (MOVIE10 / MOVIE20 / NO): ");
-
-            String couponCode = scanner.nextLine();
-
-            double originalPrice = ticket.getTicketPrice();
-
-            double discount =
-                    discountCoupon.applyDiscount(
-                            couponCode,
-                            originalPrice
-                    );
-
-            double finalPrice = originalPrice - discount;
+        while (running) {
 
             System.out.println();
-            System.out.println("========== BILL ==========");
-            System.out.println("Original Price : ₹" + originalPrice);
-            System.out.println("Discount       : ₹" + discount);
-            System.out.println("Final Price    : ₹" + finalPrice);
+            System.out.println("========== MENU ==========");
+            System.out.println("1. Show Available Seats");
+            System.out.println("2. Book Ticket");
+            System.out.println("3. Cancel Ticket");
+            System.out.println("4. Apply Discount Coupon");
+            System.out.println("5. Movie Rating");
+            System.out.println("6. Exit");
             System.out.println("==========================");
-        }
 
-        // Show seats after booking
-        theatre.displaySeats();
+            System.out.print("Enter your choice: ");
 
-        // Cancel ticket
-        System.out.println();
-        System.out.print("Enter seat number to cancel: ");
+            int choice = scanner.nextInt();
 
-        String cancelSeat = scanner.nextLine();
+            scanner.nextLine();
 
-        booking.cancelTicket(cancelSeat);
+            switch (choice) {
 
-        // Show seats after cancellation
-        theatre.displaySeats();
+                case 1:
 
-        // Movie rating
-        System.out.println();
-        System.out.print("Give movie rating (1 - 5): ");
+                    // Show available seats
+                    theatre.displaySeats();
 
-        int rating = scanner.nextInt();
+                    break;
 
-        boolean validRating = movieRating.setRating(rating);
+                case 2:
 
-        if (validRating) {
+                    // Book ticket
+                    System.out.println();
 
-            movieRating.displayRating();
+                    System.out.print(
+                            "Enter booking date (yyyy-MM-dd): ");
 
-        } else {
+                    String dateInput = scanner.nextLine();
 
-            System.out.println();
-            System.out.println("Invalid rating!");
-            System.out.println("Please give a rating between 1 and 5.");
+                    DateTimeFormatter formatter =
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                    LocalDate bookingDate =
+                            LocalDate.parse(dateInput, formatter);
+
+                    System.out.println(
+                            "Booking Day: "
+                            + bookingDate.getDayOfWeek());
+
+                    System.out.println();
+
+                    System.out.print(
+                            "Enter seat number to book (Example: A3): ");
+
+                    String bookSeat = scanner.nextLine();
+
+                    Ticket ticket =
+                            booking.bookTicket(
+                                    bookSeat,
+                                    bookingDate);
+
+                    if (ticket != null) {
+
+                        ticket.displayTicket();
+                    }
+
+                    break;
+
+                case 3:
+
+                    // Cancel ticket
+                    System.out.println();
+
+                    System.out.print(
+                            "Enter seat number to cancel: ");
+
+                    String cancelSeat = scanner.nextLine();
+
+                    booking.cancelTicket(cancelSeat);
+
+                    break;
+
+                case 4:
+
+                    // Discount coupon
+                    System.out.println();
+
+                    System.out.print(
+                            "Enter original ticket price: ₹");
+
+                    double price = scanner.nextDouble();
+
+                    scanner.nextLine();
+
+                    System.out.print(
+                            "Enter coupon code (MOVIE10 / MOVIE20 / NO): ");
+
+                    String couponCode = scanner.nextLine();
+
+                    double discount =
+                            discountCoupon.applyDiscount(
+                                    couponCode,
+                                    price);
+
+                    double finalPrice =
+                            price - discount;
+
+                    System.out.println();
+
+                    System.out.println("========== BILL ==========");
+                    System.out.println(
+                            "Original Price : ₹" + price);
+
+                    System.out.println(
+                            "Discount       : ₹" + discount);
+
+                    System.out.println(
+                            "Final Price    : ₹" + finalPrice);
+
+                    System.out.println("==========================");
+
+                    break;
+
+                case 5:
+
+                    // Movie rating
+                    System.out.println();
+
+                    System.out.print(
+                            "Give movie rating (1 - 5): ");
+
+                    int rating = scanner.nextInt();
+
+                    scanner.nextLine();
+
+                    boolean validRating =
+                            movieRating.setRating(rating);
+
+                    if (validRating) {
+
+                        movieRating.displayRating();
+
+                    } else {
+
+                        System.out.println();
+                        System.out.println("Invalid rating!");
+                        System.out.println(
+                                "Please give a rating between 1 and 5.");
+                    }
+
+                    break;
+
+                case 6:
+
+                    // Exit
+                    running = false;
+
+                    System.out.println();
+                    System.out.println(
+                            "Thank you for using Movie Ticket Booking System!");
+
+                    break;
+
+                default:
+
+                    System.out.println();
+                    System.out.println("Invalid choice!");
+                    System.out.println(
+                            "Please select a number between 1 and 6.");
+            }
         }
 
         scanner.close();
